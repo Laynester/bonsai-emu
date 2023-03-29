@@ -1,0 +1,26 @@
+{
+    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.preferences.quoteStyle": "single",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.fixAll.sortJSON": false,
+        "source.organizeImports": true
+    },
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "git.ignoreLimitWarning": true,
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "editor.wordWrap": "on",
+    "emmet.showExpandedAbbreviation": "never",
+    "eslint.validate": [
+        "javascript",
+        "typescript"
+    ],
+    "eslint.workingDirectories": [
+        "./src"
+    ]
+    ,"emmet.showAbbreviationSuggestions": false
+}
