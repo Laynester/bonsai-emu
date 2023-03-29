@@ -1,3 +1,3 @@
-import { Application } from '../../app';
+import { Application, TextsManager } from '../../app';
 
-export const GetTexts = () => Application.instance.texts;
+export const GetTexts = (): TextsManager => Application.instance.texts;

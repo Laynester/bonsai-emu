@@ -3,10 +3,15 @@ import { Handler, HandshakeHandler } from '../handlers';
 import { InventoryHandler } from '../handlers/InventoryHandler';
 import { RoomHandler } from '../handlers/room/RoomHandler';
 import {
+    FurnitureAliasesEvent,
     GetCreditsInfoEvent,
+    GetRoomAdEvent,
+    GuestRoomInfoEvent,
     IncomingMessage,
     InfoRetrieveMessageEvent,
     InitCryptoMessageEvent,
+    OpenFlatConnectionEvent,
+    RoomEntryDataEvent,
     SSOTicketMessageEvent,
 } from './incoming';
 import { IncomingHeaders } from './util';
@@ -48,6 +53,7 @@ export class PacketManager {
     }
 
     private registerIncoming(): void {
+        // handshake
         this.incoming.set(
             IncomingHeaders.INIT_CRYPTO,
             new InitCryptoMessageEvent(),
@@ -63,9 +69,30 @@ export class PacketManager {
             new InfoRetrieveMessageEvent(),
         );
 
+        // inventory
+
         this.incoming.set(
             IncomingHeaders.GET_CREDITS,
             new GetCreditsInfoEvent(),
         );
+
+        // room
+        this.incoming.set(
+            IncomingHeaders.OPEN_FLAT_CONNECTION,
+            new OpenFlatConnectionEvent(),
+        );
+        this.incoming.set(
+            IncomingHeaders.FURNITURE_ALIASES,
+            new FurnitureAliasesEvent(),
+        );
+        this.incoming.set(
+            IncomingHeaders.ROOM_ENTRY_DATA,
+            new RoomEntryDataEvent(),
+        );
+        this.incoming.set(
+            IncomingHeaders.GUEST_ROOM_INFO,
+            new GuestRoomInfoEvent(),
+        );
+        this.incoming.set(IncomingHeaders.ROOM_AD_INFO, new GetRoomAdEvent());
     }
 }

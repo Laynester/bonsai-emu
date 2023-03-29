@@ -1,7 +1,6 @@
 import { GameClient } from '../../';
-import { GetTexts } from '../../../api';
+import { GetHabbos, GetTexts } from '../../../api';
 import { Habbo } from '../../../hotel';
-import { HabboManager } from '../../../hotel/habbo/HabboManager';
 import {
     AuthenticationOKComposer,
     AvailabilityStatusComposer,
@@ -48,11 +47,9 @@ export class HandshakeHandler extends Handler {
     ) {
         const ticket = event.ticket;
 
-        console.log(ticket);
-
         if (!ticket) return client.disconnect();
 
-        const habbo: Habbo = await HabboManager.tryLogin(ticket);
+        const habbo: Habbo = await GetHabbos().tryLogin(ticket);
 
         if (!habbo)
             return client.disconnect(
@@ -64,6 +61,8 @@ export class HandshakeHandler extends Handler {
 
         habbo.client = client;
         client.habbo = habbo;
+
+        GetHabbos().addHabbo(habbo);
 
         client.sendResponse(new UserRightsComposer());
         client.sendResponse(new UniqueIdComposer());
@@ -81,5 +80,7 @@ export class HandshakeHandler extends Handler {
         if (!client.habbo) return;
 
         client.habbo.serializeObject();
+
+        client.habbo.notify('hello');
     }
 }

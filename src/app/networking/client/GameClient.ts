@@ -1,7 +1,7 @@
 import { Socket } from 'net';
 import { GetServer } from '../../../api';
 import { Logger } from '../../../common';
-import { Habbo } from '../../../hotel';
+import { AlertTypes, Habbo } from '../../../hotel';
 import { IncomingMessage } from '../packets';
 import { OutgoingMessage } from '../packets/outgoing/OutgoingMessage';
 
@@ -45,7 +45,7 @@ export class GameClient {
     }
 
     private onClose(): void {
-        //
+        this.disconnect();
     }
 
     public get socket(): Socket {
@@ -61,10 +61,15 @@ export class GameClient {
         this._socket.write(message.getBytes());
     }
 
-    public disconnect(message: string = null): void {
-        this._socket.end();
+    public sendResponses(messages: OutgoingMessage[]) {
+        for (const msg of messages) this.sendResponse(msg);
+    }
 
-        this.LOGGER.warn(message);
+    public disconnect(message: string = null, console = true): void {
+        if (console) this.LOGGER.warn(message);
+        else this.habbo.notify(message, AlertTypes.MOD);
+
+        //this._socket.end();
 
         this._socket = null;
     }

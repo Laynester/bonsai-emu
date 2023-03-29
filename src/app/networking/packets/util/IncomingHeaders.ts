@@ -3,5 +3,11 @@ export const IncomingHeaders = {
     SSO_TICKET: 415,
     INFO_RETRIEVE: 7,
     GET_CREDITS: 8,
+
     OPEN_FLAT_CONNECTION: 391,
+    FURNITURE_ALIASES: 215,
+    ROOM_ENTRY_DATA: 390,
+    GROUP_BADGE: 230,
+    ROOM_AD_INFO: 126,
+    GUEST_ROOM_INFO: 385,
 };

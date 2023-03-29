@@ -1,4 +1,5 @@
 import { Logger } from '../common';
+import { HabboManager, RoomManager } from '../hotel';
 import { DatabaseManager, GameServer } from './';
 import { ConfigManager, TextsManager } from './management';
 
@@ -11,6 +12,8 @@ export class Application {
     private _config: ConfigManager;
     private _databaseManager: DatabaseManager;
     private _texts: TextsManager;
+    private _habboManager: HabboManager;
+    private _roomManager: RoomManager;
 
     constructor() {
         Application.INSTANCE = this;
@@ -24,6 +27,8 @@ export class Application {
         this._config = new ConfigManager();
         this._databaseManager = new DatabaseManager();
         this._texts = new TextsManager();
+        this._habboManager = new HabboManager();
+        this._roomManager = new RoomManager();
 
         this.init();
     }
@@ -40,6 +45,8 @@ export class Application {
         await this._config.loadFromDatabase();
 
         await this._gameServer.init();
+
+        await this._roomManager.init();
     }
 
     public async onServerListening() {
@@ -64,5 +71,13 @@ export class Application {
 
     public get database(): DatabaseManager {
         return this._databaseManager;
+    }
+
+    public get habbos(): HabboManager {
+        return this._habboManager;
+    }
+
+    public get rooms(): RoomManager {
+        return this._roomManager;
     }
 }

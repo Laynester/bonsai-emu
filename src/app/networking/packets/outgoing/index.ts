@@ -4,3 +4,4 @@ export * from './inventory';
 export * from './navigator';
 export * from './notifications';
 export * from './OutgoingMessage';
+export * from './room';

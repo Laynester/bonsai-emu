@@ -2,49 +2,56 @@ import { GameClient, HabboEntity, HabboGenderTypeEnum } from '../../app';
 import {
     CreditBalanceComposer,
     HabboActivityPointNotificationComposer,
+    HabboBroadcastComposer,
+    ModMessageComposer,
     NavigatorSettingsComposer,
+    OutgoingMessage,
     UserObjectComposer,
 } from '../../app/networking/packets';
+import { Room } from '../room';
+import { AlertTypes } from '../util';
 
 export class Habbo {
     private _id: number;
-    private _name: string;
-    private _machineId: string;
-    private _figure: string;
-    private _gender: HabboGenderTypeEnum;
-    private _homeRoom: number;
+    public name: string;
+    public machineId: string;
+    public figure: string;
+    public gender: HabboGenderTypeEnum;
+    public homeRoom: number;
 
     private _credits: number;
     private _pixels: number;
 
     private _client: GameClient;
 
+    public loadingRoom = -1;
+    public currentRoom: Room;
+    public roomIndex = -1;
+
     constructor(entity: HabboEntity) {
         this._id = entity.id;
-        this._name = entity.name;
-        this._machineId = null;
-        this._figure = entity.figure;
-        this._gender = entity.gender;
+        this.name = entity.name;
+        this.machineId = null;
+        this.figure = entity.figure;
+        this.gender = entity.gender;
 
         this._credits = entity.credits;
         this._pixels = entity.pixels;
 
-        this._homeRoom = entity.homeRoom;
+        this.homeRoom = entity.homeRoom;
     }
 
     public serializeObject(): void {
         this._client.sendResponse(
             new UserObjectComposer(
                 this._id,
-                this._name,
-                this._figure,
-                this._gender,
+                this.name,
+                this.figure,
+                this.gender,
             ),
         );
 
-        this._client.sendResponse(
-            new NavigatorSettingsComposer(this._homeRoom),
-        );
+        this._client.sendResponse(new NavigatorSettingsComposer(this.homeRoom));
     }
 
     public updateCredits(newVal = 0) {
@@ -59,11 +66,32 @@ export class Habbo {
         );
     }
 
-    public set client(client: GameClient) {
-        this._client = client;
+    public notify(message: string, type = AlertTypes.BROADCAST) {
+        let composer: OutgoingMessage;
+
+        switch (type) {
+            case AlertTypes.MOD:
+                composer = new ModMessageComposer(message);
+                break;
+            case AlertTypes.BROADCAST:
+                composer = new HabboBroadcastComposer(message);
+                break;
+        }
+
+        if (!composer) return;
+
+        this._client.sendResponse(composer);
     }
 
-    public set machineId(uuid: string) {
-        this._machineId = uuid;
+    public get id(): number {
+        return this._id;
+    }
+
+    public get client(): GameClient {
+        return this._client;
+    }
+
+    public set client(client: GameClient) {
+        this._client = client;
     }
 }
